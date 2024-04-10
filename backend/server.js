@@ -21,10 +21,20 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/users', (req, res) =>{
-    const sql = "SELECT * FROM users"
+    const sql = "SELECT * FROM users";
     db.query(sql, (error, result) =>{
-        if(error) return res.message(500).json({message: "gagal mengambil data"})
-        res.json({result})
+        if(error) return res.status(500).json({ message: "gagal mengambil data" });
+        res.json(result);
+    });
+});
+
+
+app.get('/users/:id', (req, res) =>{
+    const {id} = req.params
+    const sql = "SELECT * FROM users WHERE id = ?"
+    db.query(sql, [id], (error, result) =>{
+        if(error) return res.json({message: `gagal menemukan user dengan id: ${id}`})
+        res.json(result)
     })
 })
 
